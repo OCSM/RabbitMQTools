@@ -130,9 +130,9 @@
         }
     }
 }
-<#
 
+<#
 .ForwardHelpTargetName Invoke-RestMethod
 .ForwardHelpCategory Cmdlet
-
 #>
+

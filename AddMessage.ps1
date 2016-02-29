@@ -91,7 +91,7 @@ function Add-RabbitMQMessage
     {
         if ($pscmdlet.ShouldProcess("server: $ComputerName/$VirtualHost", "Publish message to exchange $ExchangeName with routing key $RoutingKey"))
         {
-            $url = "http://$([System.Web.HttpUtility]::UrlEncode($ComputerName)):15672/api/exchanges/$([System.Web.HttpUtility]::UrlEncode($VirtualHost))/$([System.Web.HttpUtility]::UrlEncode($ExchangeName))/publish"
+            $url = "https://$([System.Web.HttpUtility]::UrlEncode($ComputerName)):15672/api/exchanges/$([System.Web.HttpUtility]::UrlEncode($VirtualHost))/$([System.Web.HttpUtility]::UrlEncode($ExchangeName))/publish"
             Write-Verbose "Invoking REST API: $url"
 
             $body = @{
@@ -108,8 +108,9 @@ function Add-RabbitMQMessage
 
             while ($retryCounter -lt 3)
             {
-                $result = Invoke-RestMethod $url -Credential $Credentials -AllowEscapedDotsAndSlashes -DisableKeepAlive -ErrorAction Continue -Method Post -ContentType "application/json" -Body $bodyJson
-
+                #$result = Invoke-RestMethod $url -Credential $Credentials -AllowEscapedDotsAndSlashes -DisableKeepAlive -ErrorAction Continue -Method Put -ContentType "application/json" -Body $bodyJson
+                $result = Invoke-RestMethod $url -Credential $Credentials -DisableKeepAlive -ErrorAction Continue -Method Post -ContentType "application/json" -Body $bodyJson
+                Write-Verbose $result
                 if ($result.routed -ne $true)
                 {
                     Write-Warning "Message was no routed. Operation will be retried. URI: $url"
